@@ -10,33 +10,25 @@ $(function () {
 
 let newsPro = document.getElementById('content');
 
+
 var xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://npoint.io', true);
+xhr.open('GET', 'https://api.npoint.io/8230f4554f5ce96a98ed', true);
+// xhr.open('GET','https://api.publicapis.org/entries',true);
 xhr.getResponseHeader('Content-type', 'application/json');
 
 xhr.onload = function () {
     if (this.status === 200) {
         let json = JSON.parse(this.responseText);
         let results = json.images;
+        //    console.log(results);
         let newsHtml = "";
 
         results.forEach(function (element) {
-            let originalUrl = element["ImageURL"]; 
-            let workingImageUrl = originalUrl;
-
-            // 1. Robustly extract the 33-character Google Drive File ID using RegEx
-            let match = originalUrl.match(/(?:id=|\/d\/)([a-zA-Z0-9-_]{25,50})/);
-
-            if (match && match[1]) {
-                let fileId = match[1];
-                // 2. Reconstruct utilizing Google's official embedded thumbnail parameter
-                workingImageUrl = `https://google.com{fileId}&sz=w1000`;
-            }
-
+            //   console.log(results[news]);
             let news = `
            <div class="card_second">
                 <div class="movie_det">
-                    <img src="${workingImageUrl}" alt="${element["Name"]}">
+                    <img src="${element["ImageURL"]}" alt="">
                     <div class="all_det">
                         <h4>${element["Name"]}</h4>
                         <span class="year">${element["year"]}</span>
@@ -48,14 +40,15 @@ xhr.onload = function () {
                 </div>
            </div>`;
             newsHtml += news;
+
         });
         newsPro.innerHTML = newsHtml;
     }
     else {
-        console.log("Error occurred");
+        console.log("Error occured")
     }
 }
-xhr.send();
+xhr.send()
 
 
 
