@@ -8,28 +8,39 @@ $(function () {
     $('#footer',).load('SubPage/footer.html');
 })
 
-
 let newsPro = document.getElementById('content');
-
 
 var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://api.npoint.io/8230f4554f5ce96a98ed', true);
-// xhr.open('GET','https://api.publicapis.org/entries',true);
 xhr.getResponseHeader('Content-type', 'application/json');
 
 xhr.onload = function () {
     if (this.status === 200) {
         let json = JSON.parse(this.responseText);
         let results = json.images;
-        //    console.log(results);
         let newsHtml = "";
 
         results.forEach(function (element) {
-            //   console.log(results[news]);
+            // Get the original URL from your JSON API
+            let originalUrl = element["ImageURL"]; 
+            let workingImageUrl = originalUrl;
+
+            // Check if the URL is a Google Drive download link and convert it
+            if (originalUrl.includes('://google.com')) {
+                workingImageUrl = originalUrl.replace(
+                    'https://://google.com?export=download&id=', 
+                    'https://googleusercontent.com'
+                ).replace(
+                    'https://://google.com?export=download&amp;id=', 
+                    'https://googleusercontent.com'
+                );
+            }
+
             let news = `
            <div class="card_second">
                 <div class="movie_det">
-                    <img src="${element["ImageURL"]}" alt="">
+                    <!-- Standardized variable used below instead of raw link -->
+                    <img src="${workingImageUrl}" alt="${element["Name"]}">
                     <div class="all_det">
                         <h4>${element["Name"]}</h4>
                         <span class="year">${element["year"]}</span>
@@ -41,15 +52,14 @@ xhr.onload = function () {
                 </div>
            </div>`;
             newsHtml += news;
-
         });
         newsPro.innerHTML = newsHtml;
     }
     else {
-        console.log("Error occured")
+        console.log("Error occurred");
     }
 }
-xhr.send()
+xhr.send();
 
 
 
