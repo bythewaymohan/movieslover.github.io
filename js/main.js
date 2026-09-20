@@ -65,31 +65,24 @@
 //     =clicked+"/preview";
 // }
 
-
-\((function () {\)('#header').load('SubPage/header.html'); // Fixed: Removed trailing comma
+\((document).ready(function () {\)('#header').load('SubPage/header.html');
+    \$('#second_header').load('SubPage/second_header.html');
+    \$('#footer').load('SubPage/footer.html');
 });
-\((function () {\)('#second_header').load('SubPage/second_header.html'); // Fixed: Removed trailing comma
-})
-\((function () {\)('#footer').load('SubPage/footer.html'); // Fixed: Removed trailing comma
-})
 
 let newsPro = document.getElementById('content');
 
-
 var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://npoint.io', true);
-// xhr.open('GET','https://publicapis.org);
 xhr.getResponseHeader('Content-type', 'application/json');
 
 xhr.onload = function () {
     if (this.status === 200) {
         let json = JSON.parse(this.responseText);
         let results = json.images;
-        //    console.log(results);
         let newsHtml = "";
 
         results.forEach(function (element) {
-            //   console.log(results[news]);
             let news = `
            <div class="card_second">
                 <div class="movie_det">
@@ -105,17 +98,14 @@ xhr.onload = function () {
                 </div>
            </div>`;
             newsHtml += news;
-
         });
         newsPro.innerHTML = newsHtml;
     }
     else {
-        console.log("Error occured")
+        console.log("Error occurred");
     }
 }
-xhr.send()
-
-
+xhr.send();
 
 function myFunction() {
     alert(" Disclaimer :: The Movies Lover website has been created from Project Purpose. This website is not made for the purpose of making money. The main purpose of creating this website is to develop skills.");
@@ -126,9 +116,5 @@ function websiteVisits(response) {
 }
 
 function GFG_click(clicked){
-    // Fixed: Combined the broken line so the iframe src updates correctly
     document.getElementById("iframe").src = clicked + "/preview"; 
 }
-
-
-
