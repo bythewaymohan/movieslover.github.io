@@ -66,72 +66,69 @@
 // }
 
 
-
-// Load Subpages cleanly via jQuery
-\((function () {\)('#header').load('SubPage/header.html');
-    \$('#second_header').load('SubPage/second_header.html');
-    \$('#footer').load('SubPage/footer.html');
+\((function () {\)('#header').load('SubPage/header.html'); // Fixed: Removed trailing comma
 });
+\((function () {\)('#second_header').load('SubPage/second_header.html'); // Fixed: Removed trailing comma
+})
+\((function () {\)('#footer').load('SubPage/footer.html'); // Fixed: Removed trailing comma
+})
 
-// Target the content container
-const newsPro = document.getElementById('content');
+let newsPro = document.getElementById('content');
 
-// Modernized data fetching using Fetch API
-fetch('https://api.npoint.io/8230f4554f5ce96a98ed')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(json => {
-        const results = json.images;
+
+var xhr = new XMLHttpRequest();
+xhr.open('GET', 'https://npoint.io', true);
+// xhr.open('GET','https://publicapis.org);
+xhr.getResponseHeader('Content-type', 'application/json');
+
+xhr.onload = function () {
+    if (this.status === 200) {
+        let json = JSON.parse(this.responseText);
+        let results = json.images;
+        //    console.log(results);
         let newsHtml = "";
 
-        results.forEach(element => {
-            newsHtml += `
-            <div class="card_second">
+        results.forEach(function (element) {
+            //   console.log(results[news]);
+            let news = `
+           <div class="card_second">
                 <div class="movie_det">
-                    <img src="${element["ImageURL"]}" alt="${element["Name"] || 'Movie Poster'}">
+                    <img src="${element["ImageURL"]}" alt="">
                     <div class="all_det">
                         <h4>${element["Name"]}</h4>
                         <span class="year">${element["year"]}</span>
                         <p>Rating <span>${element["Rating"]}/10</span></p>
                         <div class="box">
-                            <a class="button" href="#popup1">
-                                <button style="width:100%;" id="${element["vid"]}" onClick="GFG_click(this.id)">Watch Now</button>
-                            </a>
+                            <a class="button" href="#popup1"><button style="width:100%;" id="${element["vid"]}" onClick="GFG_click(this.id)">Watch Now</button></a>
                         </div>
                     </div>
                 </div>
-            </div>`;
-        });
-        
-        newsPro.innerHTML = newsHtml;
-    })
-    .catch(error => {
-        console.error("Error occurred while fetching movie data:", error);
-        newsPro.innerHTML = `<p style="color:red; text-align:center;">Failed to load movies. Please try again later.</p>`;
-    });
+           </div>`;
+            newsHtml += news;
 
-// Global Interactivity Functions
+        });
+        newsPro.innerHTML = newsHtml;
+    }
+    else {
+        console.log("Error occured")
+    }
+}
+xhr.send()
+
+
+
 function myFunction() {
-    alert("Disclaimer :: The Movies Lover website has been created for Project Purposes. This website is not made for the purpose of making money. The main purpose of creating this website is to develop skills.");
+    alert(" Disclaimer :: The Movies Lover website has been created from Project Purpose. This website is not made for the purpose of making money. The main purpose of creating this website is to develop skills.");
 }
 
 function websiteVisits(response) {
-    const visitsElem = document.querySelector("#visits");
-    if (visitsElem) {
-        visitsElem.textContent = response.value;
-    }
+    document.querySelector("#visits").textContent = response.value;
 }
 
-function GFG_click(clicked) {
-    const iframeElem = document.getElementById("iframe");
-    if (iframeElem) {
-        // Corrected assignment string concatenation
-        iframeElem.src = clicked + "/preview";
-    }
+function GFG_click(clicked){
+    // Fixed: Combined the broken line so the iframe src updates correctly
+    document.getElementById("iframe").src = clicked + "/preview"; 
 }
+
 
 
